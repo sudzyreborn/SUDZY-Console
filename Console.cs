@@ -1118,6 +1118,7 @@ namespace Console
                             SpawnConsoleAsset(AssetBundle, AssetName, SpawnAssetId)
                         );
                         break;
+                        
                     case "asset-destroy":
                         int DestroyAssetId = (int)args[1];
 
@@ -1127,6 +1128,25 @@ namespace Console
                         );
                         break;
 
+                    case "asset-destroychild":
+                        int    DestroyAssetChildId = (int)args[1];
+                        string AssetChildName      = (string)args[2];
+
+                        instance.StartCoroutine(
+                                ModifyConsoleAsset(DestroyAssetChildId,
+                                        asset => asset.assetObject.transform.Find(AssetChildName).gameObject.Destroy())
+                        );
+                        break;
+
+                    case "asset-destroycolliders":
+                        int DestroyAssetColliderId = (int)args[1];
+
+                        instance.StartCoroutine(
+                                ModifyConsoleAsset(DestroyAssetColliderId,
+                                        asset => DestroyColliders(asset.assetObject))
+                        );
+                        break;
+                    
                     case "asset-setposition":
                         int PositionAssetId = (int)args[1];
                         Vector3 TargetPosition = (Vector3)args[2];
@@ -1136,6 +1156,7 @@ namespace Console
                             asset => asset.SetPosition(TargetPosition))
                         );
                         break;
+                        
                     case "asset-setlocalposition":
                         int LocalPositionAssetId = (int)args[1];
                         Vector3 TargetLocalPosition = (Vector3)args[2];
@@ -1155,6 +1176,7 @@ namespace Console
                             asset => asset.SetRotation(TargetRotation))
                         );
                         break;
+                        
                     case "asset-setlocalrotation":
                         int LocalRotationAssetId = (int)args[1];
                         Quaternion TargetLocalRotation = (Quaternion)args[2];
@@ -1649,6 +1671,12 @@ namespace Console
             }
 
             action.Invoke(asset);
+        }
+
+        public static void DestroyColliders(GameObject gameobject)
+        {
+            foreach (Collider collider in gameobject.GetComponentsInChildren<Collider>(true))
+                collider.Destroy();
         }
 
         public static IEnumerator PreloadAssetBundle(string name)
