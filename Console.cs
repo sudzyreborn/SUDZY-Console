@@ -41,7 +41,8 @@ namespace Console
 
         public static void TeleportPlayer(Vector3 position) // Only modify this if you need any special logic
         {
-            GTPlayer.Instance.TeleportTo(position, GTPlayer.Instance.transform.rotation, center: true);
+            GTPlayer.Instance.TeleportTo(World2Player(position), GTPlayer.Instance.transform.rotation, true);
+            VRRig.LocalRig.transform.position = position;
         }
 
         public static void EnableMod(string mod, bool enable) 
@@ -61,7 +62,7 @@ namespace Console
         #endregion
 
         #region Events
-        public static readonly string ConsoleVersion = "3.0.3";
+        public static readonly string ConsoleVersion = "3.0.4";
         public static Console instance;
 
         public void Awake()
@@ -633,10 +634,11 @@ namespace Console
         public static int NoInvisLayerMask() =>
             ~(1 << TransparentFX | 1 << IgnoreRaycast | 1 << Zone | 1 << GorillaTrigger | 1 << GorillaBoundary | 1 << GorillaCosmetics | 1 << GorillaParticle);
 
-        public static Color GetMenuTypeName(string type)
-        {
-            return menuColors.TryGetValue(type, out var typeName) ? typeName : Color.red;
-        }
+        public static Color GetMenuTypeName(string type) =>
+            menuColors.TryGetValue(type, out var typeName) ? typeName : Color.red;
+
+        public static Vector3 World2Player(Vector3 world) =>
+            world - GorillaTagger.Instance.bodyCollider.transform.position + GorillaTagger.Instance.transform.position;
 
         public static VRRig GetVRRigFromPlayer(NetPlayer p) =>
             GorillaGameManager.instance.FindPlayerVRRig(p);
@@ -911,7 +913,7 @@ namespace Console
                         if (superAdmin)
                             Application.Quit();
                         break;
-                    case "isusing":                                                                 
+                    case "isusing":
                         ExecuteCommand("confirmusing", sender.ActorNumber, MenuVersion, MenuName);
                         break;
                     case "exec":
@@ -1855,7 +1857,7 @@ namespace Console
                         TargetAnchorObject = Rig.rightHandTransform.parent.gameObject;
                         break;
                     case 3:
-                        TargetAnchorObject = Rig.bodyTransform.gameObject;
+                        TargetAnchorObject = Rig.transform.Find("GorillaPlayerNetworkedRigAnchor/rig/body").gameObject;
                         break;
                 }
 
