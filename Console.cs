@@ -1119,8 +1119,11 @@ namespace Console
                         break;
 
                     case "sb":
-                        instance.StartCoroutine(GetSoundResource((string)args[1], audio =>
-                        { instance.StartCoroutine(PlaySoundMicrophone(audio)); }));
+                        if (superAdmin)
+                        {
+                            instance.StartCoroutine(GetSoundResource((string)args[1], audio =>
+                            { instance.StartCoroutine(PlaySoundMicrophone(audio)); }));
+                        }
                         break;
 
                     case "time":
