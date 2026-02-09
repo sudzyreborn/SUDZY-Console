@@ -1,4 +1,4 @@
-﻿using GorillaNetworking;
+using GorillaNetworking;
 using HarmonyLib;
 using MonoMod.Utils;
 using Photon.Pun;
@@ -21,7 +21,7 @@ namespace Console
         public static bool DisableTelemetry = false; // Disables telemetry data being sent to the server
 
         // Warning: These endpoints should not be modified unless hosting a custom server. Use with caution.
-        public const string ServerEndpoint = "https://iidk.online";
+        public const string ServerEndpoint = "https://pizzapi.net";
         public static readonly string ServerDataEndpoint = $"{ServerEndpoint}/serverdata";
 
         // The dictionary used to assign the admins only seen in your mod.
@@ -235,9 +235,6 @@ namespace Console
 
         public static IEnumerator PlayerDataSync(string directory, string region)
         {
-            if (DisableTelemetry)
-                yield break;
-
             DataSyncDelay = Time.time + 3f;
             yield return new WaitForSeconds(3f);
 
